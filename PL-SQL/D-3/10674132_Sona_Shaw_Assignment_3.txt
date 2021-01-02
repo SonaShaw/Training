@@ -1,0 +1,205 @@
+-- assignment 3 ---
+
+create database day3
+use day3
+
+-------------table creation ---------------
+
+create table employee 
+(employee_id int primary key identity,
+name varchar(30) not null,
+experience int check (experience >= 2),
+salary int check (salary between 12000 and 30000),
+department varchar(20) check (department in ('Hr', 'Sales', 'Accts', 'IT')),
+manager varchar(30),
+dob date check (dob >= '2000-01-01'),
+doj date check (doj >= '2018-01-01')
+)
+set dateformat DMY
+
+select * from employee
+
+----------Popualate table employee------------
+
+insert into employee values 
+('Sona Shaw', 3, 25000, 'IT', 'Riddhi Bhatt', '2002-12-13', '2020-10-28')
+select * from employee
+
+insert into employee values 
+('Rana Saheb', 2, 29500, 'HR', 'Rima Salunke', '2003/11/17', '2019/10/8', 26)
+
+
+insert into employee values 
+('Sohag Saha', 5, 28000, 'HR', 'Diwan Singh', '2004-5-16', '2019-5-18'),
+('Arpan Das', 5, 21000, 'Sales', 'Diwan Singh', '2003-2-13', '2019-5-18'),
+('Priya Dagar', 2, 15000, 'Accts', 'Nidhi Sen', '2002-9-1', '2019-6-20')
+
+----------query 1 ----------
+
+select employee_id, name, salary from employee
+
+--------------query 2 ----------
+
+select employee_id as "Employee ID", name as "Name of Employee", salary as "Salary of Employee" from employee
+
+-------------query 3 ------------
+
+select name, salary, salary+salary*25/100 as "Increamented Salary" from employee
+
+--------------query 4----------
+
+select sum(salary) as "Department Expenditure", department from employee group by department
+
+---------------query 5------------
+
+select department, sum(salary) as "total Salary", max(salary) as "maximum salary", avg(salary) as "Average Salary" from employee
+group by department
+
+---------------query 6----------
+
+select * from employee 
+order by salary asc
+
+---------------query 7--------------
+
+select rank() over (order by salary desc) as Ranking, name, salary from employee
+
+---------------query 8-------------
+
+select name, rank() over (order by salary desc) as "Rank" from employee
+
+----------------query 9 -------------------
+
+alter table employee add age int default 26 with values
+select * from employee
+
+--------------query 10-----------------------
+
+update employee
+set age = 26
+
+---------------query 11------------------------
+
+----------------query 12---------------------
+
+select count(distinct department) from employee
+
+-----------------query 13-----------------
+
+select upper(name) as "Employee Name" from employee
+
+------------------query 14-------------------------
+
+select left(name, 4) as "First 4 Letters" from employee
+
+-------------------query 15------------------
+
+select CHARINDEX('a', name) as "Position" from employee
+
+-------------------query 16--------------------------
+
+select count(employee_id) as "No. of Employee", department from employee
+group by department
+
+---------------------query 17-----------------------------
+
+select count(employee_id) as "No. of Employee", manager from employee
+group by manager
+
+----------------------query 18----------------------------
+
+select * from employee where employee_id in (1,2,3)
+
+-----------------------query 19---------------------------
+
+select * from employee where employee_id between 1 and 5
+
+------------------------query 20------------------------
+
+select * from employee where department = 'HR'
+
+------------------------query 21------------------------
+
+select * from employee where department in ('HR', 'Accts')
+
+------------------------querry 22-----------------------
+
+select * from employee where name like 'A%'
+
+------------------------query 23----------------------
+
+select * from employee where name not like '%a%'
+
+------------------------query 24---------------------
+
+select department, avg(salary) from employee
+group by department
+having avg(salary) > 16000	
+
+-------------------------query 25-------------------
+
+select * from employee 
+where department not in ('Accts', 'Sales') and salary not between 10000 and 20000
+
+------------------------query 26--------------------
+
+create view AcctsView
+as 
+select * from employee where department = 'Accts'
+select * from AcctsView
+
+------------------------queery 27----------------------
+
+select * from employee where year(dob) > 2002
+
+-----------------------query 28 --------------------
+
+select * from employee where year(doj) = 2018
+
+------------------------query 29-------------------
+
+select * from employee where year(doj) in (2018, 2019, 2020)
+
+------------------------query 30------------------
+
+select DATEDIFF(year,dob,  getdate()) from employee
+
+------------------------query 31---------------
+
+select name from employee where month(dob) = month(getdate())
+
+-----------------------query 32-----------------
+
+create view myview1
+as
+select * from employee where salary>15000 
+select * from myview1
+
+create view myview2
+as
+select * from employee where salary<12000 
+select * from myview2
+
+create view myview3
+as
+select * from employee where salary<12000 and salary>10000
+select * from myview3
+
+----------------------query 33----------------
+
+			--done--
+
+--------------------query 34----------------
+
+insert into myview1 values
+('Deepak Raj', 2, 14000, 'IT', 'Rishab Pani', '2001/03/19', '2019/05/26', 26)
+
+delete from myview1 where employee_id = 3
+select * from employee
+
+update myview1 
+set age=23
+where employee_id = 1
+
+---------------------query 35-----------------
+
